@@ -7,6 +7,11 @@ const path = require('path')
 // loading env variables 
 dotenv.config({path:'./config/config.env'})
 
+// import and load the connectDB function 
+const connectDB = require('./config/db')
+//call the function 
+connectDB()
+
 // initialiase app 
 const app = express()
 
