@@ -22,5 +22,13 @@
   "bugs": {
     "url": "https://github.com/manulangat1/node_tinder_for_food/issues"
   },
-  "homepage": "https://github.com/manulangat1/node_tinder_for_food#readme"
+  "homepage": "https://github.com/manulangat1/node_tinder_for_food#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mocha": "^8.1.1",
+    "mongoose": "^5.9.29"
+  }
 }
