@@ -20,6 +20,10 @@ const UserSchema  = new mongoose.Schema({
         required:true,
         trim:true,
         minlength:8
+    },
+    isActive:{
+        type:Boolean,
+        default:false
     }
 })
 
@@ -38,11 +42,12 @@ UserSchema.statics.findByCredentials = async (email,password) => {
         throw new Error({ error: 'Invalid login credentials' })
     }
     const isPasswordMatch = await bcrypt.compare(password,user.password)
-    // if(!isPasswordMatch){
-        
-    // }
-
+    if(!isPasswordMatch){
+        throw new Error({ error: 'Invalid login credentials' })
     }
+    return user
+
+    
 }
 
 const User = mongoose.model('User',UserSchema)
