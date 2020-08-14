@@ -12,6 +12,9 @@ const connectDB = require('./config/db')
 //call the function 
 connectDB()
 
+// import routes 
+const User = require('./routes/User')
+
 // initialiase app 
 const app = express()
 
@@ -24,7 +27,8 @@ if (process.env.NODE_ENV === "development"){
 app.use(express.json())
 
 //test res 
-app.get('/',(req,res) => res.send("hey"))
+// app.get('/',(req,res) => res.send("hey"))
+app.use('/auth/v1/',User)
 
 //intiliase the port 
 const PORT = process.env.PORT 

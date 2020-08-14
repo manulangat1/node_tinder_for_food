@@ -8,10 +8,12 @@ const TokenSchema = new mongoose.Schema({
         required:true,
         ref:'User'
     },
-    token :{
-        type:String,
-        required:true
-    },
+    tokens :[{
+        token:{
+            type:String,
+            required:true
+        }
+    }],
     createdAt:{
         type:Date,
         required:true,
@@ -20,14 +22,5 @@ const TokenSchema = new mongoose.Schema({
     }
 })
 
-TokenSchema.methods.generateAuthToken = async function(user){
-    const tokena = jwt.sign({_id:user._id},process.env.JWT_KEY)
-    const token = new Token({
-        _userId:user._id,
-        token:tokena
-    })
-    await token.save()
-    return tokena
-}
 const Token = mongoose.model('Token',TokenSchema)
 module.exports = Token
