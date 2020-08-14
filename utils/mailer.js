@@ -23,7 +23,7 @@ exports.sendmail = async(mail) => {
         from:process.env.EMAIL,
         to:`${mail.to}`,
         subject:`${mail.subject}`,
-        subject:`${mail.html}`
+        html:`${mail.html}`
     }
     return await transporter.sendMail(mails,(err,data) => {
         if(err){
