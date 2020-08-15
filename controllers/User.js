@@ -97,13 +97,14 @@ exports.loginUser = async (req,res,next) => {
         })
     }
 }
-exports.confirmToken = async(res,req) => {
-    console.log(req.params)
+exports.confirmToken = async(req,res) => {
+    // console.log(req.params)
     try{
         const token = req.params.token
-        console.log(token)
-        const token_ = await Token.findOne({token})
-        if (!token){
+        // console.log(token)
+        const token_ = await Token.findOne({'tokens.token':token})
+        // console.log(token_)
+        if (!token_){
             return res.status(400).json({
                 success:false,
                 message:'User not found..'
@@ -173,6 +174,8 @@ exports.logOutUser = async(req,res,next) => {
 exports.resendConfirm = async (req,res) => {
     try{
         const { email } = req.body
+        const user = await User.findOne({email:email})
+        const token = await generateAuthToken(user._id)
         const mail = {
             from:process.env.EMAIL,
             to:`${email}`,
