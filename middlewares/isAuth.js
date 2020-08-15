@@ -25,9 +25,9 @@ exports.isAuth = async(req,res,next) => {
         }
     } catch (err){
         console.log(`Error:${err}`.red.underline)
-        res.status(500).json({
+        res.status(401).json({
             success:false,
-            message:'Internal Server Error'
+            message:'Invalid token'
         })
     }
 }

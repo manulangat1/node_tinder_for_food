@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const Token = require('../models/Token')
 const  { sendmail} = require('../utils/mailer')
+
+
+
 const generateAuthToken = async (user) => {
     // console.log(user)
     try{
@@ -21,8 +24,6 @@ const generateAuthToken = async (user) => {
                 _userId:user,
                 token:tokena
             })
-            // user.tokens = user.tokens.concat({token})
-            // token.tokens = token.tokens.concat({tokena})
             await token.save()
             return tokena 
         }
@@ -129,6 +130,40 @@ exports.confirmToken = async(res,req) => {
         
         
     } catch(err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+
+exports.loadUser = async (req,res) => {
+    try{
+        res.status(200).json({
+            success:true,
+            user:req.user,
+            token:req.token
+        })
+    } catch (err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+
+exports.logOutUser = async(req,res,next) => {
+    try{
+        const token = await Token.findOne({'tokens.token':req.token})
+        await token.deleteOne()
+        // await req.user.save()
+        res.status(200).json({
+            success:true,
+            message:'Logged out successfully'
+        })
+    } catch (err){
         console.log(`Error! :${err}`.red.bold)
         return res.status(500).json({
             success:false,
