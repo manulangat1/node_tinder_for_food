@@ -14,6 +14,7 @@ connectDB()
 
 // import routes 
 const User = require('./routes/User')
+const Recipe = require('./routes/Recipe')
 
 // initialiase app 
 const app = express()
@@ -29,7 +30,7 @@ app.use(express.json())
 //test res 
 // app.get('/',(req,res) => res.send("hey"))
 app.use('/auth/v1/',User)
-
+app.use('/api/v1/recipes/',Recipe)
 //intiliase the port 
 const PORT = process.env.PORT 
 
