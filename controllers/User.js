@@ -83,7 +83,7 @@ exports.loginUser = async (req,res,next) => {
             }
             
         } else{
-            res.status(404).json({
+            return res.status(404).json({
                 success:false,
                 message:'User not found'
             })
@@ -98,12 +98,13 @@ exports.loginUser = async (req,res,next) => {
     }
 }
 exports.confirmToken = async(res,req) => {
+    console.log(req.params)
     try{
         const token = req.params.token
         console.log(token)
         const token_ = await Token.findOne({token})
         if (!token){
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 message:'User not found..'
             })
@@ -129,7 +130,7 @@ exports.confirmToken = async(res,req) => {
         
     } catch(err){
         console.log(`Error! :${err}`.red.bold)
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             message:'Internal Server Error'
         })
