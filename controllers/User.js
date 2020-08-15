@@ -7,9 +7,8 @@ const  { sendmail} = require('../utils/mailer')
 
 
 const generateAuthToken = async (user) => {
-    // console.log(user)
     try{
-        // console.log(user)
+
         const tokenb = await Token.findOne({_userId:user})
         // console.log(tokenb)
         if (tokenb){
@@ -162,6 +161,28 @@ exports.logOutUser = async(req,res,next) => {
         res.status(200).json({
             success:true,
             message:'Logged out successfully'
+        })
+    } catch (err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+exports.resendConfirm = async (req,res) => {
+    try{
+        const { email } = req.body
+        const mail = {
+            from:process.env.EMAIL,
+            to:`${email}`,
+            subject: 'Account Verification Token',
+            html:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/v1/confirmation\/' + token + '.\n'
+        }
+        await sendmail(mail)
+        res.status(200).json({
+            success:true,
+            message:'Activation email resent Successfully'
         })
     } catch (err){
         console.log(`Error! :${err}`.red.bold)
