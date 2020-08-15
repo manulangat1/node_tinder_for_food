@@ -5,9 +5,10 @@ const Recipe = require('../models/Recipe')
 exports.getRecipes = async(req,res) => {
     try{
            
-        const recipes = await Recipe.find()
+        const recipes = await Recipe.find({user:req.user})
         res.status(200).json({
             success:true,
+            count:recipes.length,
             data:recipes
         })
     } catch (err){

@@ -3,12 +3,16 @@ const User = require('../models/User')
 const Token = require('../models/Token')
 
 
-exports.isAuth = (req,res,next) => {
+exports.isAuth = async(req,res,next) => {
     try{
-        const token = req.header('Authorization').replace('Bearer','')
+        // const token = req.header('Authorization').replace('Bearer','')
+        const token = req.header('Authorization').replace('Bearer ','')
         const data = jwt.verify(token,process.env.JWT_KEY)
-        const tokenData = await Token.findOne({'tokens.token':token})
-        const user = await User.findById(tokenData._userId)
+        // console.log(token)
+        const tokens = await Token.findOne({_userId:data._id,'tokens.token':token})
+        // console.log(tokens)
+
+        const user = await User.findById(tokens._userId)
         if (!user){
             res.status(401).json({
                 success:false,
@@ -20,7 +24,7 @@ exports.isAuth = (req,res,next) => {
             next()
         }
     } catch (err){
-        console.log(`Error:${err}`)
+        console.log(`Error:${err}`.red.underline)
         res.status(500).json({
             success:false,
             message:'Internal Server Error'

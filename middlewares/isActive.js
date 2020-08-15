@@ -1,7 +1,7 @@
 exports.isActive = async(req,res,next) => {
     try{
-        if(req.user && res.user.isActive){
-            next()
+        if(req.user && req.user.isActive){
+             return next()
         } else{
             // console.log(`Error:${err}`)
         res.status(400).json({
