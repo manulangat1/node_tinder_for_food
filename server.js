@@ -13,6 +13,9 @@ const connectDB = require('./config/db')
 //call the function 
 connectDB()
 
+const setBack  = require('./back')
+setBack()
+
 // import routes 
 const User = require('./routes/User')
 const Recipe = require('./routes/Recipe')
