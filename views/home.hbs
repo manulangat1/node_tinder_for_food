@@ -1,0 +1,23 @@
+
+<h1> Reset your password</h1> 
+{{#if messd}}
+    <p>{{messd}}</p>
+    <p>success</p>
+{{/if}}
+<section>
+<form action="" method="post">
+    <div class="form-class">
+        <label>Email</label>
+        <input type="email" name="email" id="">
+    </div>
+    <div class="form-class">
+        <label>New Password</label>
+        <input type="password" name="password" id="">
+    </div>
+    <div class="form-class">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" id="">
+    </div>
+    <input type="submit" value="Reset">
+</form>
+</section>

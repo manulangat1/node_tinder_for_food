@@ -26,6 +26,7 @@
   "homepage": "https://github.com/manulangat1/node_tinder_for_food#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",

@@ -121,10 +121,11 @@ exports.confirmToken = async(req,res) => {
             user.isActive = true 
         await user.save()
         console.log(user)
-        res.status(200).json({
-            success:true,
-            message:'Activation Successful, Login in to continue'
-        })
+        // res.status(200).json({
+        //     success:true,
+        //     message:'Activation Successful, Login in to continue'
+        // })
+        res.status(200).render('Confirm',{layout:false})
         }
         }
         
@@ -199,5 +200,33 @@ exports.resendConfirm = async (req,res) => {
             success:false,
             message:'Internal Server Error'
         })
+    }
+}
+
+exports.resetPassword = async(req,res) => {
+    try{
+        if (req.body){
+            const { email,password,confirm_password} = req.body 
+            if (password === confirm_password){
+                const user = await User.findOne({email:email})
+                user.isActive = false
+                user.password =password
+                const token = await generateAuthToken(user._id)
+                const mail = {
+                    from:process.env.EMAIL,
+                    to:`${email}`,
+                    subject: 'Password Reset Confirm',
+                    html:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/v1/confirmation\/' + token + '.\n'
+                }
+                await user.save()
+                await sendmail(mail)
+                const messd = 'You have successfully reset your password, Kindly Check your mail to confirm'
+                res.status(200).render('home',{messd:messd})
+            }
+        }
+        res.render('home',{layout:false})
+    } catch (err){
+        console.log(`Err:${err}`)
+        res.status(500).render('500',{layout:false})
     }
 }
