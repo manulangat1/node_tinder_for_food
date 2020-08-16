@@ -8,6 +8,7 @@ exports.getRecipes = async(req,res) => {
         const recipes = await Recipe.find({user:req.user})
         res.status(200).json({
             success:true,
+            token:req.token,
             count:recipes.length,
             data:recipes
         })
@@ -29,6 +30,7 @@ exports.postRecipe = async (req,res) => {
         await recipe.save()
         res.status(201).json({
             success:true,
+            token:req.token,
             data:recipe
         })
     } catch (err){
@@ -47,6 +49,7 @@ exports.getRecipeById = async(req,res) => {
         if (recipe){
             res.status(200).json({
                 success:true,
+                token:req.token,
                 data:recipe
             })
         } else {

@@ -157,11 +157,17 @@ exports.loadUser = async (req,res) => {
 exports.logOutUser = async(req,res,next) => {
     try{
         const token = await Token.findOne({'tokens.token':req.token})
-        await token.deleteOne()
+        if (token){
+            await token.deleteOne()
         // await req.user.save()
         res.status(200).json({
             success:true,
             message:'Logged out successfully'
+        })
+        }
+        res.status(401).json({
+            success:false,
+            message:'Invalid token'
         })
     } catch (err){
         console.log(`Error! :${err}`.red.bold)
