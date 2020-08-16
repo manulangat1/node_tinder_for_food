@@ -10,7 +10,6 @@ const generateAuthToken = async (user) => {
     try{
 
         const tokenb = await Token.findOne({_userId:user})
-        // console.log(tokenb)
         if (tokenb){
             const token = jwt.sign({_id:user},process.env.JWT_KEY)
             tokenb.tokens = tokenb.tokens.concat({token})
@@ -39,7 +38,6 @@ exports.registerUser = async (req,res,next) => {
         const {  email,username,password} = req.body
         const user = new User({email,username,password})
         if (user){
-            // console.log(user)
             const token = await generateAuthToken(user._id)
             if (token){
                 await user.save()
@@ -73,7 +71,6 @@ exports.loginUser = async (req,res,next) => {
         const user = await User.findByCredentials(email,password)
         if (user){
             const token = await generateAuthToken(user._id)
-            console.log(token)
             if(token){
                 res.status(200).json({
                     success:true,
@@ -98,12 +95,9 @@ exports.loginUser = async (req,res,next) => {
     }
 }
 exports.confirmToken = async(req,res) => {
-    // console.log(req.params)
     try{
         const token = req.params.token
-        // console.log(token)
         const token_ = await Token.findOne({'tokens.token':token})
-        // console.log(token_)
         if (!token_){
             return res.status(400).json({
                 success:false,
@@ -120,11 +114,6 @@ exports.confirmToken = async(req,res) => {
         } else{
             user.isActive = true 
         await user.save()
-        console.log(user)
-        // res.status(200).json({
-        //     success:true,
-        //     message:'Activation Successful, Login in to continue'
-        // })
         res.status(200).render('Confirm',{layout:false})
         }
         }
