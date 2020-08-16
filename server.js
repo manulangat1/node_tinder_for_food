@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const dotenv = require('dotenv')
 const colors = require('colors')
 const path = require('path')
+const exphbs = require('express-handlebars')
 
 // loading env variables 
 dotenv.config({path:'./config/config.env'})
@@ -24,9 +25,15 @@ if (process.env.NODE_ENV === "development"){
     app.use(morgan('dev'))
 }
 
+
+
 // initiliase body parse 
 app.use(express.json())
 
+
+//setting up hbs 
+app.engine('.hbs',exphbs({extname:'.hbs'}))
+app.set('view_engine', '.hbs')
 //test res 
 // app.get('/',(req,res) => res.send("hey"))
 app.use('/auth/v1/',User)
