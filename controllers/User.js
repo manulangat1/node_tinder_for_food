@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const Token = require('../models/Token')
+
+// import joi schemas and middlewares
+const middleware = require('../middlewares/Joi_middleware')
+const schemas = require('../middlewares/Schema')
+
 const  { sendmail} = require('../utils/mailer')
 
 
