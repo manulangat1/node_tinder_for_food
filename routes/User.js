@@ -9,7 +9,7 @@ const schemas = require('../middlewares/Schema')
 
 const router = express.Router()
 
-router.route('/',middleware(schemas.userRegister)).post(registerUser)
+router.route('/').post(registerUser)
 router.route('/login/').post(loginUser)
 router.route('/user/').get( isAuth, loadUser)
 router.route('/logout/').post( isAuth, logOutUser)
