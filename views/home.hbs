@@ -1,0 +1,38 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container p-2">
+
+<h1> Reset your password</h1> 
+{{#if messd}}
+    <p>{{messd}}</p>
+    <p>success</p>
+{{/if}}
+<section>
+<form action="" method="post">
+    <div class="form-class">
+        <label>Email</label>
+        <input type="email" required name="email" id="" class="form-control mb-3" >
+    </div>
+    <div class="form-class">
+        <label>New Password</label>
+        <input type="password" required name="password" id="" class="form-control mb-3" >
+    </div>
+    <div class="form-class">
+        <label>Confirm Password</label>
+        <input type="password" required name="confirm_password" id="" class="form-control mb-3" >
+    </div>
+    <input type="submit" value="Reset" class="btn btn-primary">
+</form>
+</section>
+    </div>
+</body>
+</html>

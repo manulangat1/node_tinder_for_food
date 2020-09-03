@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const Token = require('../models/Token')
 const  { sendmail} = require('../utils/mailer')
+
+
+
 const generateAuthToken = async (user) => {
-    // console.log(user)
     try{
-        // console.log(user)
+
         const tokenb = await Token.findOne({_userId:user})
-        // console.log(tokenb)
         if (tokenb){
             const token = jwt.sign({_id:user},process.env.JWT_KEY)
             tokenb.tokens = tokenb.tokens.concat({token})
@@ -21,8 +22,6 @@ const generateAuthToken = async (user) => {
                 _userId:user,
                 token:tokena
             })
-            // user.tokens = user.tokens.concat({token})
-            // token.tokens = token.tokens.concat({tokena})
             await token.save()
             return tokena 
         }
@@ -39,7 +38,6 @@ exports.registerUser = async (req,res,next) => {
         const {  email,username,password} = req.body
         const user = new User({email,username,password})
         if (user){
-            // console.log(user)
             const token = await generateAuthToken(user._id)
             if (token){
                 await user.save()
@@ -73,7 +71,6 @@ exports.loginUser = async (req,res,next) => {
         const user = await User.findByCredentials(email,password)
         if (user){
             const token = await generateAuthToken(user._id)
-            console.log(token)
             if(token){
                 res.status(200).json({
                     success:true,
@@ -97,13 +94,11 @@ exports.loginUser = async (req,res,next) => {
         })
     }
 }
-exports.confirmToken = async(res,req) => {
-    console.log(req.params)
+exports.confirmToken = async(req,res) => {
     try{
         const token = req.params.token
-        console.log(token)
-        const token_ = await Token.findOne({token})
-        if (!token){
+        const token_ = await Token.findOne({'tokens.token':token})
+        if (!token_){
             return res.status(400).json({
                 success:false,
                 message:'User not found..'
@@ -119,11 +114,7 @@ exports.confirmToken = async(res,req) => {
         } else{
             user.isActive = true 
         await user.save()
-        console.log(user)
-        res.status(200).json({
-            success:true,
-            message:'Activation Successful, Login in to continue'
-        })
+        res.status(200).render('Confirm',{layout:false})
         }
         }
         
@@ -134,5 +125,97 @@ exports.confirmToken = async(res,req) => {
             success:false,
             message:'Internal Server Error'
         })
+    }
+}
+
+exports.loadUser = async (req,res) => {
+    try{
+        res.status(200).json({
+            success:true,
+            user:req.user,
+            token:req.token
+        })
+    } catch (err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+
+exports.logOutUser = async(req,res,next) => {
+    try{
+        const token = await Token.findOne({'tokens.token':req.token})
+        if (token){
+            await token.deleteOne()
+        // await req.user.save()
+        res.status(200).json({
+            success:true,
+            message:'Logged out successfully'
+        })
+        }
+        res.status(401).json({
+            success:false,
+            message:'Invalid token'
+        })
+    } catch (err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+exports.resendConfirm = async (req,res) => {
+    try{
+        const { email } = req.body
+        const user = await User.findOne({email:email})
+        const token = await generateAuthToken(user._id)
+        const mail = {
+            from:process.env.EMAIL,
+            to:`${email}`,
+            subject: 'Account Verification Token',
+            html:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/v1/confirmation\/' + token + '.\n'
+        }
+        await sendmail(mail)
+        res.status(200).json({
+            success:true,
+            message:'Activation email resent Successfully'
+        })
+    } catch (err){
+        console.log(`Error! :${err}`.red.bold)
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error'
+        })
+    }
+}
+
+exports.resetPassword = async(req,res) => {
+    try{
+        if (req.body){
+            const { email,password,confirm_password} = req.body 
+            if (password === confirm_password){
+                const user = await User.findOne({email:email})
+                user.isActive = false
+                user.password =password
+                const token = await generateAuthToken(user._id)
+                const mail = {
+                    from:process.env.EMAIL,
+                    to:`${email}`,
+                    subject: 'Password Reset Confirm',
+                    html:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/v1/confirmation\/' + token + '.\n'
+                }
+                await user.save()
+                await sendmail(mail)
+                const messd = 'You have successfully reset your password, Kindly Check your mail to confirm'
+                res.status(200).render('home',{messd:messd})
+            }
+        }
+        res.render('home',{layout:false})
+    } catch (err){
+        console.log(`Err:${err}`)
+        res.status(500).render('500',{layout:false})
     }
 }
