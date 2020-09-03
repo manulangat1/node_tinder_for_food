@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "test": "mocha   --timeout 10000 --recursive --exit"
   },
   "repository": {
     "type": "git",
@@ -35,10 +36,12 @@
     "joi": "^17.2.0",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^8.1.1",
+    "mockgoose": "^8.0.4",
     "mongoose": "^5.9.29",
     "morgan": "^1.10.0",
     "node-resque": "^7.0.6",
-    "nodemailer": "^6.4.11"
+    "nodemailer": "^6.4.11",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

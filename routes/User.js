@@ -2,6 +2,11 @@ const express = require('express')
 const {registerUser,loginUser, confirmToken, loadUser , logOutUser, resendConfirm, resetPassword} = require('../controllers/User')
 const { isAuth } = require('../middlewares/isAuth')
 const { isActive } = require('../middlewares/isActive')
+
+
+const middleware = require('../middlewares/Joi_middleware')
+const schemas = require('../middlewares/Schema')
+
 const router = express.Router()
 
 router.route('/').post(registerUser)
